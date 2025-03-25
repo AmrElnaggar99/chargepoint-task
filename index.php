@@ -62,7 +62,6 @@ function computeNextGeneration($seed, $directions)
             $cellsToCheck[toCellKey($ni, $nj)] = true;
         }
     }
-
     foreach ($cellsToCheck as $key => $_) {
         [$i, $j] = fromCellKey($key);
         $countOfLiveNeighbors = countLiveNeighbors($directions, $seed, $i, $j);
@@ -84,7 +83,11 @@ function computeNextGeneration($seed, $directions)
 
 function printGlider($glider)
 {
-    // Determine bounding box coordinates (3×3 for a glider)
+    if (empty($glider)) {
+        echo "No live cells";
+        return;
+    }
+    // Determine bounding box coordinates
     $minI = PHP_INT_MAX;
     $maxI = -PHP_INT_MAX;
     $minJ = PHP_INT_MAX;
@@ -98,17 +101,18 @@ function printGlider($glider)
     }
     echo "<pre>";
     // Print head
+    echo "\t";
     for ($j = $minJ; $j <= $maxJ; $j++) {
-        echo str_pad($j, 3, ' ', STR_PAD_LEFT) . " ";
+        echo $j . "\t";
     }
     echo PHP_EOL;
     // Print each row
     for ($i = $minI; $i <= $maxI; $i++) {
-        echo $i . " ";
+        echo $i . "\t";
         for ($j = $minJ; $j <= $maxJ; $j++) {
             $isAlive = in_array([$i, $j], $glider);
             echo $isAlive ? '⬛' : '⬜';
-            echo "  ";
+            echo "\t";
         }
         echo PHP_EOL;
     }
@@ -133,6 +137,7 @@ function printGlider($glider)
     <style>
         pre {
             font-size: 18px;
+            tab-size: 4;
         }
     </style>
 </head>
