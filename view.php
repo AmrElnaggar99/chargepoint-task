@@ -18,13 +18,13 @@ function calculateBoundingBox(array $glider): array
     return [$minRow, $maxRow, $minCol, $maxCol];
 }
 
-function printGlider(array $glider): void
+function renderGliderAsHtml(array $glider): void
 {
     if (empty($glider)) {
         echo "No live cells";
         return;
     }
-    $liveCellsMap = buildLiveMap($glider); // Instead of checking the glider array, we convert it to a hashmap for faster lookups.
+    $liveCellsMap = createLiveCellMap($glider); // Instead of checking the glider array, we convert it to a hashmap for faster lookups.
     [$minRow, $maxRow, $minCol, $maxCol] = calculateBoundingBox($glider);
 
     echo "<pre>";

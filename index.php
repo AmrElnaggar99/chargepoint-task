@@ -1,5 +1,6 @@
 <?php
 require 'view.php';
+
 const NUM_OF_GENERATIONS = 8;
 $seed = [
     [0, 1],
@@ -28,7 +29,7 @@ $seed = [
     <?php
     for ($row = 0; $row < NUM_OF_GENERATIONS; $row++) {
         echo "<h2>Generation " . ($row + 1) . "</h2>";
-        printGlider($seed);
+        renderGliderAsHtml($seed);
         $seed = computeNextGeneration($seed, $directions);
     }
 

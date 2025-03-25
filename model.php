@@ -42,7 +42,7 @@ function countLiveNeighbors(array $directions, array $liveCellsMap, int $row, in
     return $count;
 }
 
-function buildLiveMap(array $arr): array
+function createLiveCellMap(array $arr): array
 {
     $liveCellsMap = [];
     foreach ($arr as [$row, $col]) {
@@ -51,9 +51,16 @@ function buildLiveMap(array $arr): array
     return $liveCellsMap;
 }
 
+/**
+ * Computes the next generation of live cells based on the previous state and the Game of Life rules.
+ *
+ * @param array $seed The current generation of live cells.
+ * @param array $directions The possible directions for neighbors.
+ * @return array The next generation of live cells.
+ */
 function computeNextGeneration(array $seed, array $directions): array
 {
-    $liveCellsMap = buildLiveMap($seed); // Instead of checking the seed array, we convert it to a hashmap for faster lookups.
+    $liveCellsMap = createLiveCellMap($seed); // Instead of checking the seed array, we convert it to a hashmap for faster lookups.
     $nextGeneration = [];
     $cellsToCheck = [];     // Since there are no sets in PHP, we use a hashmap to prevent checking the same cell twice.
     foreach ($seed as [$row, $col]) {
