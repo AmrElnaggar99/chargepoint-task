@@ -39,12 +39,12 @@ function getNeighbors($directions, $i, $j)
     return $neighbors;
 }
 
-function countLiveNeighbors($directions, $seed, $i, $j)
+function countLiveNeighbors($directions, $liveCellsMap, $i, $j)
 {
     $count = 0;
     $neighbors = getNeighbors($directions, $i, $j);
     foreach ($neighbors as [$ni, $nj]) {
-        if (in_array([$ni, $nj], $seed)) {
+        if (isset($liveCellsMap[toCellKey($ni, $nj)])) {
             $count++;
         }
     }
@@ -53,6 +53,10 @@ function countLiveNeighbors($directions, $seed, $i, $j)
 
 function computeNextGeneration($seed, $directions)
 {
+    $liveCellsMap = [];          // Instead of checking the seed array, we convert it to a hashmap for faster lookups.
+    foreach ($seed as [$i, $j]) {
+        $liveCellsMap[toCellKey($i, $j)] = true;
+    }
     $nextGeneration = [];
     $cellsToCheck = [];     // Since there are no sets in PHP, we use a hashmap to prevent checking the same cell twice.
     foreach ($seed as [$i, $j]) {
@@ -64,8 +68,8 @@ function computeNextGeneration($seed, $directions)
     }
     foreach ($cellsToCheck as $key => $_) {
         [$i, $j] = fromCellKey($key);
-        $countOfLiveNeighbors = countLiveNeighbors($directions, $seed, $i, $j);
-        $isLive = in_array([$i, $j], $seed);
+        $countOfLiveNeighbors = countLiveNeighbors($directions, $liveCellsMap, $i, $j);
+        $isLive = isset($liveCellsMap[toCellKey($i, $j)]);
         if ($isLive) {
             // Any live cell with two or three live neighbors lives on to the next generation
             if ($countOfLiveNeighbors == 2 || $countOfLiveNeighbors == 3) {
@@ -86,6 +90,10 @@ function printGlider($glider)
     if (empty($glider)) {
         echo "No live cells";
         return;
+    }
+    $liveCellsMap = [];          // Instead of checking the glider array, we convert it to a hashmap for faster lookups.
+    foreach ($glider as [$i, $j]) {
+        $liveCellsMap[toCellKey($i, $j)] = true;
     }
     // Determine bounding box coordinates
     $minI = PHP_INT_MAX;
@@ -110,7 +118,7 @@ function printGlider($glider)
     for ($i = $minI; $i <= $maxI; $i++) {
         echo $i . "\t";
         for ($j = $minJ; $j <= $maxJ; $j++) {
-            $isAlive = in_array([$i, $j], $glider);
+            $isAlive = isset($liveCellsMap[toCellKey($i, $j)]);
             echo $isAlive ? '⬛' : '⬜';
             echo "\t";
         }
