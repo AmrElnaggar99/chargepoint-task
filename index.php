@@ -20,106 +20,109 @@ $directions = [
     SOUTHEAST
 ];
 
-function toCellKey($i, $j)
+function toCellKey(int $row, int $col): string
 {
-    return "$i,$j";
+    return "$row,$col";
 }
 
-function fromCellKey($key)
+function fromCellKey(string $key): array
 {
     return explode(',', $key);
 }
 
-function getNeighbors($directions, $i, $j)
+function getNeighbors(array $directions, int $row, int $col): array
 {
     $neighbors = [];
-    foreach ($directions as [$di, $dj]) {
-        $neighbors[] = [$i + $di, $j + $dj];
+    foreach ($directions as [$dRow, $dCol]) {
+        $neighbors[] = [$row + $dRow, $col + $dCol];
     }
     return $neighbors;
 }
 
-function countLiveNeighbors($directions, $liveCellsMap, $i, $j)
+function countLiveNeighbors(array $directions, array $liveCellsMap, int $row, int $col): int
 {
     $count = 0;
-    $neighbors = getNeighbors($directions, $i, $j);
-    foreach ($neighbors as [$ni, $nj]) {
-        if (isset($liveCellsMap[toCellKey($ni, $nj)])) {
+    $neighbors = getNeighbors($directions, $row, $col);
+    foreach ($neighbors as [$nRow, $nCol]) {
+        if (isset($liveCellsMap[toCellKey($nRow, $nCol)])) {
             $count++;
         }
     }
     return $count;
 }
 
-function computeNextGeneration($seed, $directions)
+function buildLiveMap(array $arr): array
 {
-    $liveCellsMap = [];          // Instead of checking the seed array, we convert it to a hashmap for faster lookups.
-    foreach ($seed as [$i, $j]) {
-        $liveCellsMap[toCellKey($i, $j)] = true;
+    $liveCellsMap = [];
+    foreach ($arr as [$row, $col]) {
+        $liveCellsMap[toCellKey($row, $col)] = true;
     }
+    return $liveCellsMap;
+}
+
+function computeNextGeneration(array $seed, array $directions): array
+{
+    $liveCellsMap = buildLiveMap($seed); // Instead of checking the seed array, we convert it to a hashmap for faster lookups.
     $nextGeneration = [];
     $cellsToCheck = [];     // Since there are no sets in PHP, we use a hashmap to prevent checking the same cell twice.
-    foreach ($seed as [$i, $j]) {
-        $cellsToCheck[toCellKey($i, $j)] = true;
-        $neighbors = getNeighbors($directions, $i, $j);
-        foreach ($neighbors as [$ni, $nj]) {
-            $cellsToCheck[toCellKey($ni, $nj)] = true;
+    foreach ($seed as [$row, $col]) {
+        $cellsToCheck[toCellKey($row, $col)] = true;
+        $neighbors = getNeighbors($directions, $row, $col);
+        foreach ($neighbors as [$nRow, $nCol]) {
+            $cellsToCheck[toCellKey($nRow, $nCol)] = true;
         }
     }
     foreach ($cellsToCheck as $key => $_) {
-        [$i, $j] = fromCellKey($key);
-        $countOfLiveNeighbors = countLiveNeighbors($directions, $liveCellsMap, $i, $j);
-        $isLive = isset($liveCellsMap[toCellKey($i, $j)]);
-        if ($isLive) {
+        [$row, $col] = fromCellKey($key);
+        $countOfLiveNeighbors = countLiveNeighbors($directions, $liveCellsMap, $row, $col);
+        $rowsLive = isset($liveCellsMap[toCellKey($row, $col)]);
+        if ($rowsLive) {
             // Any live cell with two or three live neighbors lives on to the next generation
             if ($countOfLiveNeighbors == 2 || $countOfLiveNeighbors == 3) {
-                $nextGeneration[] = [$i, $j];
+                $nextGeneration[] = [$row, $col];
             }
         } else {
             // Any dead cell with exactly three live neighbors becomes a live cell
             if ($countOfLiveNeighbors == 3) {
-                $nextGeneration[] = [$i, $j];
+                $nextGeneration[] = [$row, $col];
             }
         }
     }
     return $nextGeneration;
 }
 
-function printGlider($glider)
+function printGlider(array $glider): void
 {
     if (empty($glider)) {
         echo "No live cells";
         return;
     }
-    $liveCellsMap = [];          // Instead of checking the glider array, we convert it to a hashmap for faster lookups.
-    foreach ($glider as [$i, $j]) {
-        $liveCellsMap[toCellKey($i, $j)] = true;
-    }
+    $liveCellsMap = buildLiveMap($glider); // Instead of checking the glider array, we convert it to a hashmap for faster lookups.
     // Determine bounding box coordinates
-    $minI = PHP_INT_MAX;
-    $maxI = -PHP_INT_MAX;
-    $minJ = PHP_INT_MAX;
-    $maxJ = -PHP_INT_MAX;
+    $minRow = PHP_INT_MAX;
+    $maxRow = -PHP_INT_MAX;
+    $minCol = PHP_INT_MAX;
+    $maxCol = -PHP_INT_MAX;
 
-    foreach ($glider as [$i, $j]) {
-        $minI = min($minI, $i);
-        $maxI = max($maxI, $i);
-        $minJ = min($minJ, $j);
-        $maxJ = max($maxJ, $j);
+    foreach ($glider as [$row, $col]) {
+        $minRow = min($minRow, $row);
+        $maxRow = max($maxRow, $row);
+        $minCol = min($minCol, $col);
+        $maxCol = max($maxCol, $col);
     }
     echo "<pre>";
     // Print head
     echo "\t";
-    for ($j = $minJ; $j <= $maxJ; $j++) {
-        echo $j . "\t";
+    for ($col = $minCol; $col <= $maxCol; $col++) {
+        echo $col . "\t";
     }
     echo PHP_EOL;
     // Print each row
-    for ($i = $minI; $i <= $maxI; $i++) {
-        echo $i . "\t";
-        for ($j = $minJ; $j <= $maxJ; $j++) {
-            $isAlive = isset($liveCellsMap[toCellKey($i, $j)]);
-            echo $isAlive ? '⬛' : '⬜';
+    for ($row = $minRow; $row <= $maxRow; $row++) {
+        echo $row . "\t";
+        for ($col = $minCol; $col <= $maxCol; $col++) {
+            $rowsAlive = isset($liveCellsMap[toCellKey($row, $col)]);
+            echo $rowsAlive ? '⬛' : '⬜';
             echo "\t";
         }
         echo PHP_EOL;
@@ -127,8 +130,8 @@ function printGlider($glider)
     echo "</pre>";
     // Print the list of live cells
     echo "<pre>";
-    foreach ($glider as [$i, $j]) {
-        echo "[$i, $j]" . PHP_EOL;
+    foreach ($glider as [$row, $col]) {
+        echo "[$row, $col]" . PHP_EOL;
     }
     echo "</pre>";
 }
@@ -160,8 +163,8 @@ function printGlider($glider)
         [2, 1],
         [2, 2]
     ];
-    for ($i = 0; $i < NUM_OF_GENERATIONS; $i++) {
-        echo "<h2>Generation " . ($i + 1) . "</h2>";
+    for ($row = 0; $row < NUM_OF_GENERATIONS; $row++) {
+        echo "<h2>Generation " . ($row + 1) . "</h2>";
         printGlider($seed);
         $seed = computeNextGeneration($seed, $directions);
     }
