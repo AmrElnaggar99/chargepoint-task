@@ -1,8 +1,14 @@
 <?php
-require 'view.php';
+
+require __DIR__ . '/vendor/autoload.php';
+
+use App\GameOfLife;
+use App\Grid;
+use App\View\GliderRenderer;
+use App\View\GridRenderer;
 
 const NUM_OF_GENERATIONS = 8;
-$seed = [
+$currentGlider = [
     [0, 1],
     [1, 2],
     [2, 0],
@@ -29,8 +35,11 @@ $seed = [
     <?php
     for ($row = 0; $row < NUM_OF_GENERATIONS; $row++) {
         echo "<h2>Generation " . ($row + 1) . "</h2>";
-        renderGliderAsHtml($seed);
-        $seed = computeNextGeneration($seed, $directions);
+        $grid = new Grid($currentGlider);
+        $gridRenderer = new GridRenderer($grid);
+        $gridRenderer->renderGliderInfo();
+        $game = new GameOfLife($grid);
+        $currentGlider = $game->computeNextGlider();
     }
 
     ?>
