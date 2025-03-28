@@ -37,7 +37,7 @@ $currentGlider = [
         echo "<h2>Generation " . ($row + 1) . "</h2>";
         $grid = new Grid($currentGlider);
         $gridRenderer = new GridRenderer($grid);
-        $gridRenderer->renderGliderInfo();
+        $gridRenderer->renderGliderWithInfo();
         $game = new GameOfLife($grid);
         $currentGlider = $game->computeNextGlider();
     }

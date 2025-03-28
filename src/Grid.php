@@ -17,10 +17,7 @@ class Grid
         [1, -1],  // SOUTHWEST
         [1,  1]   // SOUTHEAST
     ];
-    /**
-     * Instead of checking the _currentGlider array, we convert it to a hashmap for faster lookups.
-     */
-    private array $gliderCellsMap;
+    private array $gliderCellsMap;  // Because checking for existence in a map is faster than in an array.
     private array $boundingBox;
     private bool $isEmpty;
     private array $currentGlider;
@@ -45,7 +42,7 @@ class Grid
         }
     }
     /**
-     * Returns all the neighbors of a cell.
+     * Returns all the possible 8 neighbors of a cell in the infinite grid.
      * @param int $row The row of the cell.
      * @param int $col The column of the cell.
      * @return array The neighbors of the cell.

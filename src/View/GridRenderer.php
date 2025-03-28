@@ -20,7 +20,7 @@ class GridRenderer
      * The glider is an array of cells, where each cell is an array of two integers: [row, col].
      * @return void
      */
-    public function renderGliderInfo(): void
+    public function renderGliderWithInfo(): void
     {
         if ($this->grid->isEmpty()) {
             echo "No live cells";

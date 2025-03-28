@@ -1,11 +1,20 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use App\CellKeyUtils;
+use App\Utils\CellKeyUtils;
 
-class UtilsTest extends TestCase
+class CellKeyUtilsTest extends TestCase
 {
+    /**
+     * Test that CellKeyUtils cannot be instantiated.
+     */
+    public function testCannotInstantiateCellKeyUtils(): void
+    {
+        $this->expectException(\Error::class);
+        $this->expectExceptionMessage('Call to private App\Utils\CellKeyUtils::__construct()');
 
+        new CellKeyUtils();
+    }
     /**
      * The output of toCellKey can be used as the input to fromCellKey
      */
