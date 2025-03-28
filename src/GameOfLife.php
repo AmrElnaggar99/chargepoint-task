@@ -26,9 +26,8 @@ class GameOfLife
     private function determineShapeOfNextGlider(array $cellsToCheck, array $gliderCellsMap): array
     {
         $nextGlider = [];
-        foreach ($cellsToCheck as $key => $_) {
+        foreach ($cellsToCheck as $key => $countOfLiveNeighbors) {
             [$row, $col] = CellKeyUtils::fromCellKey($key);
-            $countOfLiveNeighbors = $this->grid->countLiveNeighbors($row, $col);
             $isLive = isset($gliderCellsMap[CellKeyUtils::toCellKey($row, $col)]);
             if ($isLive) {
                 // Any live cell with two or three live neighbors lives on to the next generation.

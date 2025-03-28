@@ -29,6 +29,18 @@ $currentGlider = [
 Live cells: [0, 1] [1, 2] [2, 0] [2, 1] [2, 2]
 ```
 
+## Solution Steps
+
+1. Iterate on current live cells (seed) and compute the indices of their 8 neighbors.
+2. Count the live neighbors of every neighbor of a currently live cell.
+3. Generate a map of all collected cells like:
+   ```
+   {
+     "i,j" (string) => numOfLiveNeighbors (int)
+   }
+   ```
+4. Based on this map, apply the rules of the Game of Life so the `"i,j"` cell gets live or dead.
+
 ## Stack
 
 - The project is written in PHP while following object-oriented programming (OOP) principles.
@@ -106,6 +118,8 @@ I decided to only print the bounding box of the live cells. Which can later be r
   - The code will render a message “No live cells”.
 - Reach a state of equilibrium (no more cells dying or living)
   - The code will keep generating the same generation for as long as requested.
+- Some glider patterns will keep repeating every fixed number of generations
+  - The code will generate the same glider but placed in a different position.
 
 ### Structure
 

@@ -29,16 +29,16 @@ class GridUtils
     }
     /**
      * Creates a map of glider cells for faster lookups.
-     * @param array $currentGlider The array of the glider cells to create the map for.
-     * The currentGlider is an array of cells, where each cell is an array of two integers: [row, col].
+     * @param array $array The array of the glider cells to create the map for.
+     * The array is an array of cells, where each cell is an array of two integers: [row, col].
      * @return array The map of glider cells as an associative array.
      */
-    public static function createGliderCellMap(array $currentGlider): array
+    public static function convertArrayToMap(array $array): array
     {
-        $gliderCellsMap = [];
-        foreach ($currentGlider as [$row, $col]) {
-            $gliderCellsMap[CellKeyUtils::toCellKey($row, $col)] = true;
+        $map = [];
+        foreach ($array as [$row, $col]) {
+            $map[CellKeyUtils::toCellKey($row, $col)] = true;
         }
-        return $gliderCellsMap;
+        return $map;
     }
 }

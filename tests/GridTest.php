@@ -78,8 +78,8 @@ class GridTest extends TestCase
         ];
 
         $grid = new Grid($glider);
-
-        $liveNeighbors = $grid->countLiveNeighbors(1, 1);
+        $neighbors = $grid->computeNeighbors(1, 1);
+        $liveNeighbors = $grid->countLiveNeighbors($neighbors);
 
         $this->assertEquals(2, $liveNeighbors);
     }
