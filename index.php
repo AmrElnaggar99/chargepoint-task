@@ -4,7 +4,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\GameOfLife;
 use App\Grid;
-use App\View\GliderRenderer;
 use App\View\GridRenderer;
 
 const NUM_OF_GENERATIONS = 8;
@@ -41,7 +40,6 @@ $currentGlider = [
         $game = new GameOfLife($grid);
         $currentGlider = $game->computeNextGlider();
     }
-
     ?>
 </body>
 

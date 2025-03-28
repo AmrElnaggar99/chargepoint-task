@@ -18,23 +18,9 @@ class GameOfLife
      */
     public function computeNextGlider(): array
     {
-        $cellsToCheck = $this->getCellsToCheck();
+        $cellsToCheck = $this->grid->computeCellsToCheck();
         $gliderCellsMap = $this->grid->getGliderCellsMap();
         return $this->determineShapeOfNextGlider($cellsToCheck, $gliderCellsMap);
-    }
-
-    private function getCellsToCheck(): array
-    {
-        $currentGlider = $this->grid->getCurrentGlider();
-        $cellsToCheck = [];
-        foreach ($currentGlider as [$row, $col]) {
-            $cellsToCheck[CellKeyUtils::toCellKey($row, $col)] = true;
-            $neighbors = $this->grid->computeNeighbors($row, $col);
-            foreach ($neighbors as [$nRow, $nCol]) {
-                $cellsToCheck[CellKeyUtils::toCellKey($nRow, $nCol)] = true;
-            }
-        }
-        return $cellsToCheck;
     }
 
     private function determineShapeOfNextGlider(array $cellsToCheck, array $gliderCellsMap): array

@@ -42,6 +42,26 @@ class Grid
         }
     }
     /**
+     * Computes all the possible cells needed to be checked.
+     * This includes the cells of the current glider and their 8 neighbors without duplicates.
+     * @return array The cells to check as an associative array where the keys are cell keys "row,col" and the values are true.
+     * The associative array is used to prevent duplicates because PHP does not have a Set.
+     */
+    public function computeCellsToCheck(): array
+    {
+        $cellsToCheck = [];
+        foreach ($this->currentGlider as [$row, $col]) {
+            $cellsToCheck[CellKeyUtils::toCellKey($row, $col)] = true;
+            $neighbors = $this->computeNeighbors($row, $col);
+            foreach ($neighbors as [$nRow, $nCol]) {
+                $cellsToCheck[CellKeyUtils::toCellKey($nRow, $nCol)] = true;
+            }
+        }
+
+        return $cellsToCheck;
+    }
+
+    /**
      * Returns all the possible 8 neighbors of a cell in the infinite grid.
      * @param int $row The row of the cell.
      * @param int $col The column of the cell.
@@ -59,7 +79,7 @@ class Grid
     public function countLiveNeighbors(int $row, int $col): int
     {
         $count = 0;
-        $neighbors = self::computeNeighbors($row, $col);
+        $neighbors = $this->computeNeighbors($row, $col);
         foreach ($neighbors as [$nRow, $nCol]) {
             if (isset($this->gliderCellsMap[CellKeyUtils::toCellKey($nRow, $nCol)])) {
                 $count++;
