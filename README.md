@@ -89,9 +89,6 @@ To test the project you only need to care about `index.php` at the root folder.
   - Note that large numbers can have I/O limitations since the output is in the browser.
 - Feel free to change the initial seed variable `currentGlider`.
 
-> [!NOTE]  
-> Note that the output will print your initial seed as Generation 1.
-
 ## Design Decisions
 
 > The coordinates in the grid do not follow a cartesian grid (where x is the column and y is the row) but an i and j indices (where i is the row and j is the column). Which I find more intuitive in programming.

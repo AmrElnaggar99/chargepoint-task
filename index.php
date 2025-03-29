@@ -32,13 +32,18 @@ $currentGlider = [
 
 <body>
     <?php
+    echo "<h2>Initial seed </h2>";
+    $grid = new Grid($currentGlider);
+    $gridRenderer = new GridRenderer($grid);
+    $gridRenderer->renderGliderWithInfo();
+    $game = new GameOfLife($grid);
     for ($row = 0; $row < NUM_OF_GENERATIONS; $row++) {
-        echo "<h2>Generation " . ($row + 1) . "</h2>";
-        $grid = new Grid($currentGlider);
-        $gridRenderer = new GridRenderer($grid);
-        $gridRenderer->renderGliderWithInfo();
-        $game = new GameOfLife($grid);
         $currentGlider = $game->computeNextGlider();
+        $grid = new Grid($currentGlider);
+        $game = new GameOfLife($grid);
+        $gridRenderer = new GridRenderer($grid);
+        echo "<h2>Generation " . ($row + 1) . "</h2>";
+        $gridRenderer->renderGliderWithInfo();
     }
     ?>
 </body>
